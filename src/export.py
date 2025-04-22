@@ -5,7 +5,7 @@ from src.count import get_and_increment_count
 import json
 import matplotlib.pyplot as plt
 
-def export_results(model,hyperparameters,y_test, y_pred):
+def export_results(model,hyperparameters,y_test, y_pred,df):
     counter = get_and_increment_count()
 
     folder_path=create_folder(counter)
@@ -16,15 +16,10 @@ def export_results(model,hyperparameters,y_test, y_pred):
 
 
     plot_and_save_predictions(y_test, y_pred, folder_path)
+    # Export the DataFrame
+    export_dataframe(folder_path, df)
    
-    # # Copy dataset
-    # if os.path.exists(dataset_path):
-    #     shutil.copy(dataset_path, os.path.join(results_folder, "dataset.csv"))
-
-    # # Copy predicted price graph
-    # if os.path.exists(predicted_price_graph_path):
-    #     shutil.copy(predicted_price_graph_path, os.path.join(results_folder, "predicted_price_graph.png"))
-
+   
     # # Save evaluation metrics
     # evaluation_metrics_path = os.path.join(results_folder, "evaluation_metrics.txt")
     # with open(evaluation_metrics_path, "w") as f:
@@ -87,3 +82,10 @@ def plot_and_save_predictions(y_test, y_pred, folder_path):
     plt.savefig(graph_path)
     plt.close()
     print(f"Predicted price graph saved to {graph_path}")
+
+
+def export_dataframe(folder_path, df):
+    # Save the DataFrame as a CSV file in the results folder
+    dataframe_path = os.path.join(folder_path, "dataframe.csv")
+    df.to_csv(dataframe_path, index=False)
+    print(f"DataFrame exported to {dataframe_path}")
