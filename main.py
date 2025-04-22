@@ -45,7 +45,10 @@ def main():
 
     # # # Evaluate the model
     rmse, y_test, y_pred=model.evaluate(X_test, y_test, scaler)
-    export_results(model, hyperparameters,y_test, y_pred,df)
+    evaluation_metrics = {
+        "RMSE": rmse
+    }
+    export_results(model, hyperparameters,y_test, y_pred,df, evaluation_metrics)
     
 
     

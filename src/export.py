@@ -5,7 +5,7 @@ from src.count import get_and_increment_count
 import json
 import matplotlib.pyplot as plt
 
-def export_results(model,hyperparameters,y_test, y_pred,df):
+def export_results(model,hyperparameters,y_test, y_pred,df,evaluation_metrics):
     counter = get_and_increment_count()
 
     folder_path=create_folder(counter)
@@ -18,7 +18,7 @@ def export_results(model,hyperparameters,y_test, y_pred,df):
     plot_and_save_predictions(y_test, y_pred, folder_path)
     # Export the DataFrame
     export_dataframe(folder_path, df)
-   
+    export_evaluation_metrics(folder_path, evaluation_metrics)
    
     # # Save evaluation metrics
     # evaluation_metrics_path = os.path.join(results_folder, "evaluation_metrics.txt")
@@ -89,3 +89,11 @@ def export_dataframe(folder_path, df):
     dataframe_path = os.path.join(folder_path, "dataframe.csv")
     df.to_csv(dataframe_path, index=False)
     print(f"DataFrame exported to {dataframe_path}")
+
+
+def export_evaluation_metrics(folder_path, evaluation_metrics):
+    # Save evaluation metrics as a JSON file
+    metrics_path = os.path.join(folder_path, "evaluation_metrics.json")
+    with open(metrics_path, "w", encoding="utf-8") as f:
+        json.dump(evaluation_metrics, f, indent=4)
+    print(f"Evaluation metrics exported to {metrics_path}")

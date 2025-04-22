@@ -47,6 +47,7 @@ class Model:
 
         # Plot actual vs predicted prices
         plot_predictions(y_test_inv, y_pred_inv)
+        # print
 
         return rmse, y_test_inv, y_pred_inv
 
