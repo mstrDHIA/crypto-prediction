@@ -44,8 +44,8 @@ def main():
     model.train(X_train, y_train, X_test, y_test, epochs=hyperparameters['epochs'], batch_size=hyperparameters['batch_size'])
 
     # # # Evaluate the model
-    rmse=model.evaluate(X_test, y_test, scaler)
-    export_results(model, hyperparameters)
+    rmse, y_test, y_pred=model.evaluate(X_test, y_test, scaler)
+    export_results(model, hyperparameters,y_test, y_pred)
     
 
     

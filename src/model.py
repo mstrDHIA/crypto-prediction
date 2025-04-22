@@ -48,7 +48,7 @@ class Model:
         # Plot actual vs predicted prices
         plot_predictions(y_test_inv, y_pred_inv)
 
-        return rmse
+        return rmse, y_test_inv, y_pred_inv
 
     def predict(self, X_test):
         return self.model.predict(X_test)

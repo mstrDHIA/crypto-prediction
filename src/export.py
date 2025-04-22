@@ -3,7 +3,9 @@ import shutil
 from datetime import datetime
 from src.count import get_and_increment_count
 import json
-def export_results(model,hyperparameters):
+import matplotlib.pyplot as plt
+
+def export_results(model,hyperparameters,y_test, y_pred):
     counter = get_and_increment_count()
 
     folder_path=create_folder(counter)
@@ -11,7 +13,9 @@ def export_results(model,hyperparameters):
     export_model_summary(model, folder_path)
 
     export_hyperparameters(folder_path, hyperparameters)
-    
+
+
+    plot_and_save_predictions(y_test, y_pred, folder_path)
    
     # # Copy dataset
     # if os.path.exists(dataset_path):
@@ -65,3 +69,21 @@ def export_hyperparameters(folder_path, hyperparameters):
     with open(hyperparameters_path, "w", encoding="utf-8") as f:
         json.dump(hyperparameters, f, indent=4)
     print(f"Hyperparameters exported to {hyperparameters_path}")
+
+
+def plot_and_save_predictions(y_test, y_pred, folder_path):
+    # Plot actual vs predicted prices
+    plt.figure(figsize=(14, 6))
+    plt.plot(y_test, label='Actual Price', linewidth=2)
+    plt.plot(y_pred, label='Predicted Price', linestyle='--')
+    plt.title('Actual vs Predicted Closing Prices')
+    plt.xlabel('Time Step')
+    plt.ylabel('Price')
+    plt.legend()
+    plt.grid(True)
+
+    # Save the plot to the results folder
+    graph_path = os.path.join(folder_path, "predicted_price_graph.png")
+    plt.savefig(graph_path)
+    plt.close()
+    print(f"Predicted price graph saved to {graph_path}")

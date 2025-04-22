@@ -64,6 +64,7 @@ def plot_predictions(y_test_inv, y_pred_inv):
     plt.legend()
     plt.grid(True)
     plt.show()
+    return plt
 
 def plot_correlation_matrix(df):
     import seaborn as sns
