@@ -11,8 +11,16 @@ def main():
 
     
     hyperparameters = {
-        'epochs': 10,
+        'epochs': 100,
         'batch_size': 32,
+        'activation': 'relu',
+        'optimizer': 'adam',
+        'loss_function': 'mean_squared_error',
+        'units': 64,
+        'dropout': 0.2,
+        'layers': 2,
+        'validation_split': 0.2,
+        'time_steps': 5  # Number of previous time steps to consider for prediction
         # 'learning_rate': 0.001,
         # 'dropout_rate': 0.2,
         # 'lstm_units': 50,
@@ -26,9 +34,9 @@ def main():
     df = load_data('data/BTCUSD.csv')
 
     #data preprocessing
-    df, scaled_df, scaler=data_preprocessing(df)
+    df, scaled_df, scaler=data_preprocessing(df,800)
 
-    X_train, X_test, y_train, y_test = data_preparation(scaled_df)
+    X_train, X_test, y_train, y_test = data_preparation(scaled_df,hyperparameters)
     
 
    
@@ -37,11 +45,12 @@ def main():
 
 
     # # # Initialize and train the model
-    model = Model(input_shape=(X_train.shape[1], X_train.shape[2]))
-    model.build_model(input_shape=(X_train.shape[1], X_train.shape[2]))
+    model = Model(input_shape=(X_train.shape[1], X_train.shape[2]), hyperparameters=hyperparameters)
+    input_shape=(X_train.shape[1], X_train.shape[2])
+    a=model.build_model(input_shape=(X_train.shape[1], X_train.shape[2]), hyperparameters=hyperparameters)
     print("Model summary:")
     print(model.summary())
-    model.train(X_train, y_train, X_test, y_test, epochs=hyperparameters['epochs'], batch_size=hyperparameters['batch_size'])
+    model.train(X_train, y_train, X_test, y_test, hyperparameters)
 
     # # # Evaluate the model
     rmse, y_test, y_pred=model.evaluate(X_test, y_test, scaler)

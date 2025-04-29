@@ -1,9 +1,11 @@
 import pandas as pd
 import numpy as np
-from src.visualization import plot_correlation_matrix
+from src.visualization import plot_correlation_matrix, plot_close_price
 from src.feature_engineering import create_features
 from sklearn.preprocessing import MinMaxScaler
-def data_preprocessing(df):
+def data_preprocessing(df,dropped_rows=None):
+
+    df=drop_rows(df,dropped_rows)
 
     print("Data Preprocessing started...")
     #Data cleaning
@@ -14,6 +16,8 @@ def data_preprocessing(df):
 
     #Data Analysis
     analyze_data(df)
+
+    plot_close_price(df)
 
     #Feature Engineering
     df=create_features(df)
@@ -81,7 +85,7 @@ def analyze_data(df):
     print("\nMissing values per column:")
     print(df.isnull().sum())
     print("\ncorrelation Matrix:")
-    plot_correlation_matrix(df)
+    # plot_correlation_matrix(df)
 
 
 def scale_data(df):
@@ -101,3 +105,15 @@ def scale_data(df):
     print(df.shape)
     print("Data scaling completed.")
     return scaled_df, scaler
+
+
+def drop_rows(df, rows_to_drop):
+    if rows_to_drop is not None:
+        print(f"Dropping rows: {rows_to_drop}")
+        print(len(df))
+        # dropped_rows = list(range(rows_to_drop))
+        df = df.iloc[:rows_to_drop]
+        print(len(df))
+    else:
+        print("No rows to drop.")
+    return df

@@ -4,29 +4,43 @@ from keras.models import Sequential
 from src.utils import inverse_scaling
 import os
 class Model:
-    def __init__(self, input_shape):
-        self.model = self.build_model(input_shape)
+    def __init__(self, input_shape, hyperparameters):
+        self.model = self.build_model(input_shape, hyperparameters)
 
-    def build_model(self, input_shape):
+    def build_model(self, input_shape, hyperparameters):
 
         model = Sequential()
         model.add(Input(shape=input_shape))
-        model.add(LSTM(units=64,return_sequences=True,))
-        model.add(Dropout(0.2))
+        # for _ in range(hyperparameters['layers']-1):
+        #     if _ == 0:
+        #         model.add(LSTM(units=hyperparameters['units'], return_sequences=True))
+        #         model.add(Dropout(hyperparameters['dropout']))
+        #     else:
+                
+        #         model.add(LSTM(units=hyperparameters['units'],return_sequences=False,))
+        #         model.add(Dropout(hyperparameters['dropout']))
         
-        model.add(LSTM(units=64,return_sequences=False,))
-        model.add(Dropout(0.2))
+        # model.add(LSTM(units=64,return_sequences=False,))
+        
+        # model.add(Dropout(0.2))
+        # New Dense layer
+        model.add(LSTM(units=hyperparameters['units'], return_sequences=False))
+        model.add(Dropout(hyperparameters['dropout']))
+        # model.add(LSTM(units=hyperparameters['units'],return_sequences=False,))
+        # model.add(Dropout(hyperparameters['dropout']))
+        model.add(Dense(units=32, activation=hyperparameters['activation']))  # Added Dense layer with 32 units
+        
         model.add(Dense(1))  # Output layer
 
-        model.compile(optimizer='adam', loss='mean_squared_error')
+        model.compile(optimizer=hyperparameters['optimizer'], loss=hyperparameters['loss_function'])
         return model
     def summary(self):
         return self.model.summary()
-    def train(self, X_train, y_train, X_val, y_val, epochs=100, batch_size=32):
+    def train(self, X_train, y_train, X_val, y_val,hyperparameters):
         history = self.model.fit(
             X_train, y_train,
-            epochs=epochs,
-            batch_size=batch_size,
+            epochs=hyperparameters['epochs'],
+            batch_size=hyperparameters['batch_size'],
             validation_data=(X_val, y_val),
             verbose=1
         )
@@ -37,6 +51,11 @@ class Model:
         import numpy as np
 
         y_pred = self.model.predict(X_test)
+        y_pred = y_pred.flatten()  # Flatten the predictions to match the shape of y_test
+        print(f"Predicted values: {y_pred}")
+        print(f"Actual values: {y_test}")
+        print(f"Predicted values shape: {y_pred.shape}")
+        print(f"Actual values shape: {y_test.shape}")
         rmse = np.sqrt(mean_squared_error(y_test, y_pred))
         
         print(f"RMSE: {rmse}")
