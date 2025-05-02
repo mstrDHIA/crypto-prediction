@@ -5,7 +5,7 @@ from src.feature_engineering import create_features
 from sklearn.preprocessing import MinMaxScaler
 def data_preprocessing(df,dropped_rows=None):
 
-    df=drop_rows(df,dropped_rows)
+    # df=drop_rows(df,dropped_rows)
 
     print("Data Preprocessing started...")
     #Data cleaning

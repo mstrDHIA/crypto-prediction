@@ -28,6 +28,7 @@ def date_to_timestamp(date_series, unit='s'):
 def timestamp_to_date(timestamp_series, unit='s'):
     try:
         date_series = pd.to_datetime(timestamp_series, unit=unit)
+        print(f"Converted timestamps to dates: {date_series}")
         return date_series
     except Exception as e:
         print(f"An error occurred: {e}")

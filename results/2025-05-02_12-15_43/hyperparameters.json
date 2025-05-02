@@ -1,0 +1,12 @@
+{
+    "epochs": 10,
+    "batch_size": 32,
+    "activation": "relu",
+    "optimizer": "adam",
+    "loss_function": "mean_squared_error",
+    "units": 64,
+    "dropout": 0.2,
+    "layers": 2,
+    "validation_split": 0.2,
+    "time_steps": 5
+}

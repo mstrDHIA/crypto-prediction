@@ -7,11 +7,21 @@ from src.utils import create_sequences, scale_data, date_to_timestamp, timestamp
 from src.data_preparation import data_preparation
 from src.model import Model
 from src.export import export_results
+from src.data_getter import fetch_data_from_api, transform_json_to_csv
+
+import os
 def main():
 
-    
+
+    json_data=fetch_data_from_api("https://min-api.cryptocompare.com/data/v2/histohour", params={"fsym":"BTC","tsym":"USD","limit":2000}, headers=None)
+    path=os.path.join("data", "hour.csv")
+    # print(json_data)
+    # # pri
+    transform_json_to_csv(json_data, path)
+
+    # Define hyperparameters    
     hyperparameters = {
-        'epochs': 100,
+        'epochs': 10,
         'batch_size': 32,
         'activation': 'relu',
         'optimizer': 'adam',
@@ -26,23 +36,15 @@ def main():
         # 'lstm_units': 50,
         # 'dense_units': 25
     }
-    # epochs=10
-    # batch_size=32
-
 
     # Load and preprocess data
-    df = load_data('data/BTCUSD.csv')
+    # df = load_data('data/BTCUSD.csv')
+    df = load_data('data/hour.csv')
 
     #data preprocessing
     df, scaled_df, scaler=data_preprocessing(df,800)
 
     X_train, X_test, y_train, y_test = data_preparation(scaled_df,hyperparameters)
-    
-
-   
-    print(df.columns)
-   
-
 
     # # # Initialize and train the model
     model = Model(input_shape=(X_train.shape[1], X_train.shape[2]), hyperparameters=hyperparameters)
@@ -59,24 +61,6 @@ def main():
     }
     export_results(model, hyperparameters,y_test, y_pred,df, evaluation_metrics)
     
-
-    
-
-
-
-
-    
-    # # # Inverse scaling for predictions
-    # y_test_inv = invert_scaling(y_test, scaler)
-    # y_pred_inv = invert_scaling(model.predict(X_test), scaler)
-    # # print(f"Inverse scaled predictions: {y_pred_inv}")
-    # plot_predictions(y_test_inv, y_pred_inv)
-
-    # # # Make predictions
-    # # predictions = make_future_predictions(model, df)
-
-    # # # Visualize results
-    # # plot_predictions(df, predictions)
 
 if __name__ == "__main__":
     main()
