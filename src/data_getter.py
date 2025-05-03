@@ -14,7 +14,7 @@ def fetch_data_from_api(api_url, params=None, headers=None):
     """
     try:
         data= []
-        first_year=2022
+        first_year=2019
         response = requests.get(api_url, params=params, headers=headers)
         response.raise_for_status()  # Raise an error for bad status codes
         this_year = datetime.utcfromtimestamp(response.json()['Data']['TimeFrom'])  

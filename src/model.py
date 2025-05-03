@@ -1,6 +1,8 @@
 from src.visualization import plot_predictions
 from keras.layers import LSTM, Dense, Dropout, Input
 from keras.models import Sequential
+from keras.callbacks import EarlyStopping
+
 from src.utils import inverse_scaling
 import os
 class Model:
@@ -37,11 +39,18 @@ class Model:
     def summary(self):
         return self.model.summary()
     def train(self, X_train, y_train, X_val, y_val,hyperparameters):
+        early_stop = EarlyStopping(
+            monitor='val_loss',  # Monitor validation loss
+            patience=10,         # Stop training after 10 epochs with no improvement
+            restore_best_weights=True,  # Restore the best weights after stopping
+            verbose=1            # Print messages when stopping
+        )
         history = self.model.fit(
             X_train, y_train,
             epochs=hyperparameters['epochs'],
             batch_size=hyperparameters['batch_size'],
             validation_data=(X_val, y_val),
+            # callbacks=[early_stop],  # Add the EarlyStopping callback
             verbose=1
         )
         return history

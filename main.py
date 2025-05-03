@@ -21,7 +21,7 @@ def main():
 
     # Define hyperparameters    
     hyperparameters = {
-        'epochs': 10,
+        'epochs': 100,
         'batch_size': 32,
         'activation': 'relu',
         'optimizer': 'adam',
